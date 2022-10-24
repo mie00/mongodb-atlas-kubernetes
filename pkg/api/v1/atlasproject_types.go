@@ -156,8 +156,12 @@ func (p *AtlasProject) UpdateStatus(conditions []status.Condition, options ...st
 }
 
 func (p *AtlasProject) X509SecretObjectKey() *client.ObjectKey {
+	namespace := p.Spec.X509CertRef.Namespace
+	if namespace == "" {
+		namespace = p.Namespace
+	}
 	if p.Spec.X509CertRef != nil {
-		key := kube.ObjectKey(p.Namespace, p.Spec.X509CertRef.Name)
+		key := kube.ObjectKey(namespace, p.Spec.X509CertRef.Name)
 		return &key
 	}
 	return nil
